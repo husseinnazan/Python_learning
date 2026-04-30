@@ -14,9 +14,9 @@ def generate_password(length=12):
     return new_password
 
 def main():
-    print("========================================")
-    print("   Your Web Identities & Passwords Manager   ")
-    print("========================================")
+    print("=========================================")
+    print(" Your Web Identities & Passwords Manager   ")
+    print("=========================================")
     
     identity_file = "identities.json"
     key_file = "secret.key"
