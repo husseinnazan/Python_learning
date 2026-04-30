@@ -1,9 +1,11 @@
+# this is my first code wrote in the same day i started learning python :)
+#this is a password manager that generate and save passwords and usernames.
 import random
 import string
 import json
 import os
 from cryptography.fernet import Fernet
-
+ #note : this function generates the password if the user granted access to generate one instead of writing his own password
 def generate_password(length=12):
     all_characters = string.ascii_letters + string.digits + string.punctuation
     new_password = ""
