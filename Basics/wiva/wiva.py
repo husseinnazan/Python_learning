@@ -15,7 +15,7 @@ def generate_password(length=12):
 
 def main():
     print("========================================")
-    print("   Secure CLI Password Manager   ")
+    print("   Your Web Identities & Passwords Manager   ")
     print("========================================")
     
     identity_file = "identities.json"
