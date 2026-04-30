@@ -2,6 +2,7 @@ import random
 import string
 import json
 import os
+from cryptography.fernet import Fernet
 
 def generate_password(length=12):
     all_characters = string.ascii_letters + string.digits + string.punctuation
@@ -16,11 +17,28 @@ def main():
     print("========================================")
     
     identity_file = "identities.json"
+    key_file = "secret.key"
+
+    if not os.path.exists(key_file):
+        key = Fernet.generate_key()
+        with open(key_file, "wb") as f:
+            f.write(key)
+    else:
+        with open(key_file, "rb") as f:
+            key = f.read()
+
+    fernet = Fernet(key)
+
     if os.path.exists(identity_file):
         with open(identity_file, "r") as f:
             try:
-                saved_identities = json.load(f)
-            except json.JSONDecodeError:
+                encrypted_data = json.load(f)
+                if "data" in encrypted_data:
+                    decrypted_json = fernet.decrypt(encrypted_data["data"].encode()).decode()
+                    saved_identities = json.loads(decrypted_json)
+                else:
+                    saved_identities = encrypted_data
+            except (json.JSONDecodeError, Exception):
                 saved_identities = {}
     else:
         saved_identities = {}
@@ -56,8 +74,10 @@ def main():
                     print(f"{site}: {idt["username"]} - {idt["password"]}")
             
         elif choice == "3":
+            json_string = json.dumps(saved_identities)
+            encrypted_data = fernet.encrypt(json_string.encode()).decode()
             with open(identity_file, "w") as f:
-                json.dump(saved_identities, f, indent=4)
+                json.dump({"data": encrypted_data}, f, indent=4)
             print("Exiting Password Manager. Stay secure!")
             break
             
